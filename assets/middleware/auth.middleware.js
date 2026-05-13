@@ -7,6 +7,10 @@ const PASSWORD_CHANGE_REQUIRED_CODE = "PASSWORD_CHANGE_REQUIRED";
 
 // Rol 1 = Admin | Rol 2 = Maestro | Rol 3 = Alumno
 
+function logAuthDebug(message, meta = {}) {
+    console.info("[auth.middleware]", message, meta);
+}
+
 function passwordChangeRequired(res) {
     return res.status(403).json({
         error: "Debes cambiar tu contraseña antes de continuar.",
@@ -22,13 +26,39 @@ function superAdminRequired(res) {
 }
 
 async function authenticateRequest(req, res) {
-    const token = req.headers.authorization?.split(" ")[1];
+    const authorizationHeader = req.headers.authorization;
+    const token = authorizationHeader?.split(" ")[1];
+
+    logAuthDebug("authenticateRequest received header", {
+        hasAuthorization: Boolean(authorizationHeader),
+        hasBearerToken: Boolean(token),
+        path: req.originalUrl,
+        method: req.method
+    });
+
     if (!token) return res.status(401).json({ error: "No token provided" });
 
     try {
         const decoded = jwt.verify(token, JWT_SECRET);
-        const user = await User.findByPk(decoded.id, {
+        const decodedUserId = decoded?.id ?? decoded?.user_id ?? null;
+        const decodedRole = Number(decoded?.rol ?? decoded?.role ?? 0);
+
+        logAuthDebug("jwt.verify succeeded", {
+            decodedId: decoded?.id ?? null,
+            decodedUserId: decoded?.user_id ?? null,
+            resolvedUserId: decodedUserId,
+            decodedRol: decoded?.rol ?? null,
+            decodedRole: decoded?.role ?? null,
+            resolvedRole: decodedRole
+        });
+
+        const user = await User.findByPk(decodedUserId, {
             attributes: ["id", "email", "level", "must_change_password", "is_super_admin"]
+        });
+
+        logAuthDebug("user lookup completed", {
+            resolvedUserId: decodedUserId,
+            userFound: Boolean(user)
         });
 
         if (!user) {
@@ -42,6 +72,8 @@ async function authenticateRequest(req, res) {
 
         req.user = {
             ...decoded,
+            id: decodedUserId,
+            user_id: decodedUserId,
             rol: Number(user.level),
             role: Number(user.level),
             must_change_password: Boolean(user.must_change_password),
@@ -49,7 +81,11 @@ async function authenticateRequest(req, res) {
         };
         req.authUser = user;
         return true;
-    } catch {
+    } catch (error) {
+        logAuthDebug("jwt.verify failed", {
+            errorName: error?.name || "UnknownError",
+            errorMessage: error?.message || "Unknown error"
+        });
         return res.status(401).json({ error: "Token inválido" });
     }
 }
