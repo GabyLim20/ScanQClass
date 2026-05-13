@@ -9,6 +9,7 @@ const routes = require('./assets/routes');
 const { sequelize } = require('./assets/models');
 
 const app = express();
+app.set("trust proxy", 1);
 const port = Number(process.env.PORT) || 3000;
 app.use(cors());
 
