@@ -1,0 +1,221 @@
+body {
+    font-family: var(--font-family);
+    background-color: var(--bg-light);
+    color: var(--text-color);
+}
+
+#wrapper {
+    height: 100vh;
+}
+
+.sidebar {
+    width: 260px;
+    min-width: 260px;
+    display: flex;
+    flex-direction: column;
+}
+
+#wrapper>.flex-grow-1 {
+    min-width: 0;
+}
+
+.x-small {
+    font-size: 0.75rem;
+}
+
+.bg-primary-light {
+    background-color: rgba(153, 71, 235, 0.1);
+}
+
+.text-main {
+    color: var(--primary-color);
+}
+
+.bg-main {
+    background-color: var(--primary-color);
+}
+
+.nav-link {
+    color: #64748b;
+    padding: 0.75rem 1rem;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.nav-link:hover {
+    background-color: #f1f5f9;
+    color: var(--primary-color);
+}
+
+.nav-link.active {
+    background-color: var(--purple-soft);
+    color: var(--primary-color);
+}
+
+.search-box {
+    position: relative;
+}
+
+.admin-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.admin-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-left: auto;
+}
+
+.admin-icon-btn {
+    background-color: var(--purple-soft);
+    border: 1px solid rgba(149, 67, 255, 0.16);
+    color: var(--primary-dark);
+}
+
+.admin-icon-btn:disabled,
+.admin-icon-btn[aria-disabled="true"] {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+.admin-logout-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    background-color: var(--primary-dark);
+    border-color: var(--primary-dark);
+    color: #fff;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.admin-logout-btn:hover,
+.admin-logout-btn:focus {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+    color: #fff;
+}
+
+.admin-sidebar-logout-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    color: #475569;
+    font-weight: 600;
+}
+
+.admin-sidebar-logout-btn:hover,
+.admin-sidebar-logout-btn:focus {
+    background-color: #fee2e2;
+    border-color: #fecaca;
+    color: #b91c1c;
+}
+
+.search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    font-size: 20px;
+}
+
+.bg-blue-soft {
+    background-color: var(--blue-soft);
+    border: 1px solid #dbeafe !important;
+}
+
+.bg-purple-soft {
+    background-color: var(--purple-soft);
+    border: 1px solid #ede9fe !important;
+}
+
+.bg-green-soft {
+    background-color: var(--green-soft);
+    border: 1px solid #dcfce7 !important;
+}
+
+.bg-pink-soft {
+    background-color: var(--pink-soft);
+    border: 1px solid #fce7f3 !important;
+}
+
+/* Hover para fondos claros */
+.bg-light-hover:hover {
+    background-color: #ffffff !important;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+}
+
+/* Bordes redondeados */
+.rounded-4 {
+    border-radius: 1rem !important;
+}
+
+@media (max-width: 767.98px) {
+    #wrapper {
+        flex-direction: column;
+        height: auto;
+        min-height: 100vh;
+    }
+
+    .sidebar {
+        width: 100%;
+        min-width: 0;
+        border-right: 0 !important;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .sidebar .nav {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .sidebar .nav-link {
+        min-width: 0;
+    }
+
+    main.flex-grow-1 {
+        min-width: 0;
+    }
+
+    .container-fluid {
+        padding: 1rem !important;
+    }
+
+    .admin-topbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    #admin-section-title {
+        width: 100%;
+    }
+
+    .admin-actions {
+        width: 100%;
+        justify-content: stretch;
+        margin-left: 0;
+    }
+
+    .admin-actions>* {
+        flex: 1 1 0;
+    }
+
+    .container-fluid>div>.d-flex.justify-content-between.align-items-center.mb-4 {
+        flex-direction: column;
+        align-items: stretch !important;
+        gap: 0.75rem;
+    }
+
+    .container-fluid>div>.d-flex.justify-content-between.align-items-center.mb-4 .btn {
+        width: 100%;
+    }
+}

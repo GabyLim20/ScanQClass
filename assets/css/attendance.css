@@ -1,0 +1,128 @@
+body {
+    background-color: var(--background-light);
+    font-family: var(--font-primary);
+    color: var(--text-color);
+}
+
+.page-title {
+    font-weight: 800;
+    color: var(--primary-dark);
+}
+
+.page-subtitle {
+    color: var(--background-dark);
+}
+
+.card {
+    box-shadow: var(--shadow);
+    border-radius: var(--border-radius-md);
+}
+
+.table thead th {
+    background-color: var(--primary-light);
+    color: var(--white);
+    white-space: nowrap;
+}
+
+tfoot th {
+    background-color: var(--primary-light);
+    color: var(--white);
+}
+
+.circular-progress {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    background: conic-gradient(var(--primary-color) 80%, var(--background-gray) 0);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+.circular-progress::before {
+    content: '';
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    background-color: var(--white);
+    border-radius: 50%;
+}
+
+.progress-value {
+    position: relative;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-dark);
+}
+
+.status-dot {
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    border-radius: 50%;
+    box-shadow: var(--shadow-box);
+    vertical-align: middle;
+}
+
+.status-present {
+    background-color: var(--success);
+}
+
+.status-absent {
+    background-color: var(--error);
+    cursor: pointer;
+    border: 0;
+}
+
+.status-pending {
+    background-color: var(--warning);
+    cursor: pointer;
+    border: 0;
+}
+
+.status-justified {
+    background-color: var(--info);
+    cursor: pointer;
+    border: 0;
+}
+
+.status-tardy {
+    color: var(--warning);
+    font-size: 1.1rem;
+}
+
+.legend .legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    margin-right: 1rem;
+}
+
+.btn-primary {
+    background-color: var(--secondary-color);
+    border-radius: var(--btn-border-radius);
+    border: none;
+    transition: var(--transition);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-dark);
+}
+
+.btn-outline-secondary {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+    border-radius: var(--btn-border-radius);
+    transition: var(--transition);
+}
+
+.btn-outline-secondary:hover {
+    background-color: var(--primary-color);
+    color: var(--white);
+}
+
+.d-none {
+    display: none !important;
+}

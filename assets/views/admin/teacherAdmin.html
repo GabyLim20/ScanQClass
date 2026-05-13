@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administración de Maestros</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@400" rel="stylesheet">
+
+    <link rel="stylesheet" href="../../css/var.css">
+    <link rel="stylesheet" href="../../css/teacherAdmin.css">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="teacher-admin-page">
+
+    <div class="container-fluid py-4 px-3 px-md-4 px-xl-5">
+
+        <div class="teacher-admin-filterbar mb-4">
+            <div class="row g-3 align-items-center">
+                <div class="col-12 col-lg">
+                    <div class="teacher-admin-search position-relative">
+                        <span class="material-symbols-outlined teacher-admin-search-icon">filter_list</span>
+                        <input type="text" class="form-control teacher-admin-search-input"
+                            placeholder="Filtrar por nombre o ID...">
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-6 col-lg-auto">
+                    <select class="form-select teacher-admin-select">
+                        <option selected>Asignatura</option>
+                        <option>Matemáticas</option>
+                        <option>Literatura</option>
+                        <option>Ciencias</option>
+                        <option>Historia</option>
+                    </select>
+                </div>
+
+                <div class="col-12 col-sm-6 col-lg-auto">
+                    <select class="form-select teacher-admin-select">
+                        <option selected>Estado</option>
+                        <option>Activo</option>
+                        <option>Inactivo</option>
+                        <option>En Licencia</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="teacher-admin-table-card mb-4">
+            <div class="table-responsive">
+                <table class="table align-middle mb-0 teacher-admin-table">
+                    <thead>
+                        <tr>
+                            <th>NOMBRE</th>
+                            <th>EMAIL/ID</th>
+                            <th>ROL/GRADO</th>
+                            <th>ESTADO</th>
+                            <th class="text-end">ACCIONES</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center gap-3">
+                                    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAty6Z2xRx9U9cnH_NF1w8phGibky2vDqFcfnQdgke2RwjWCyXR8arkQ91CE87JcSzlxb1bLnKBS6agpXw_WBM3PIr7Y4jnyN8Jl2z-SUjguYOUOFAl-zDBsFRrupOWYY-iw2KZUGP_-Z3iV7Kz5535Dp19uSYisvKWJL51OML94x56_jfjNudMojyE25cJxZ6X1cjsN8YYXWuTMloTUjPKuXIe8IjUn_9pstvJkcanOtzk5LKO1vHaSvyPU7dyuhH0PROytfmfWoY6"
+                                        alt="Docente" class="teacher-admin-avatar">
+                                    <div>
+                                        <p class="teacher-admin-name mb-0">Dra. Elena Martínez</p>
+                                        <p class="teacher-admin-subject mb-0">Matemáticas Avanzadas</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <p class="teacher-admin-email mb-0">e.martinez@slate.edu</p>
+                                <p class="teacher-admin-id mb-0">ID: SLT-40291</p>
+                            </td>
+                            <td class="teacher-admin-muted">Director de Grado (11º)</td>
+                            <td>
+                                <span class="teacher-admin-badge teacher-admin-badge-active">Activo</span>
+                            </td>
+                            <td>
+                                <div class="teacher-admin-actions d-flex justify-content-end gap-2">
+                                    <button type="button" class="btn teacher-admin-icon-btn">
+                                        <span class="material-symbols-outlined">visibility</span>
+                                    </button>
+                                    <button type="button" class="btn teacher-admin-icon-btn">
+                                        <span class="material-symbols-outlined">edit</span>
+                                    </button>
+                                    <button type="button" class="btn teacher-admin-icon-btn danger">
+                                        <span class="material-symbols-outlined">delete</span>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center gap-3">
+                                    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDDTzcJVKr4cEFgSJjFG0CgrwJaMJmHd0MSsUtaJiwn-DLE65U4NJPWvslyvkMFDblm-EsRYMSrxWy-wJUZbciIRbmsdRCpLHWtVmjMzQOFVf9VUzhzP1KTfcHVOLs0aaZyNd_XvcZdoz5HvN-QtFS8d_9gkHvqzLNQIRGeQYbiBOUYfIwLR5d1lWQaz1QJplX3SsgP5c75nNP7PasmqJRkNdGrj7XZiFNwWU0RmG1hKtxjE3jl1eVsxOv0HrBeZT5gegZKuCq1yxDb"
+                                        alt="Docente" class="teacher-admin-avatar">
+                                    <div>
+                                        <p class="teacher-admin-name mb-0">Prof. Ricardo Sosa</p>
+                                        <p class="teacher-admin-subject mb-0">Historia Universal</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <p class="teacher-admin-email mb-0">r.sosa@slate.edu</p>
+                                <p class="teacher-admin-id mb-0">ID: SLT-38110</p>
+                            </td>
+                            <td class="teacher-admin-muted">Docente Senior</td>
+                            <td>
+                                <span class="teacher-admin-badge teacher-admin-badge-active">Activo</span>
+                            </td>
+                            <td>
+                                <div class="teacher-admin-actions d-flex justify-content-end gap-2">
+                                    <button type="button" class="btn teacher-admin-icon-btn">
+                                        <span class="material-symbols-outlined">visibility</span>
+                                    </button>
+                                    <button type="button" class="btn teacher-admin-icon-btn">
+                                        <span class="material-symbols-outlined">edit</span>
+                                    </button>
+                                    <button type="button" class="btn teacher-admin-icon-btn danger">
+                                        <span class="material-symbols-outlined">delete</span>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center gap-3">
+                                    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuChTbOkjsFQnUz3VppSeyyXooaIbjhZhGxKmtDO3UQB-GJuYDg6WyX4wNu1nrk6pf9ElYfcfqPig_rrJfZ1Y5oomO3hBH96KC_8nbSCf_NB-dv_hDT4mSom7ywrNWPTjQio34xIdUWx4Ep-X3wdk54yWo7EMYC6DS5Q18x_ObrfwQdMjkykpilLI8MCNzPSY21Op1YfhhRHvjNr1kAFXZd7P323gMdu7S83nGrF075nXFW_cGsk272g5wPnL9FlEAxeZfHb6omVANW3"
+                                        alt="Docente" class="teacher-admin-avatar">
+                                    <div>
+                                        <p class="teacher-admin-name mb-0">Lic. Clara Duarte</p>
+                                        <p class="teacher-admin-subject mb-0">Literatura</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <p class="teacher-admin-email mb-0">c.duarte@slate.edu</p>
+                                <p class="teacher-admin-id mb-0">ID: SLT-41002</p>
+                            </td>
+                            <td class="teacher-admin-muted">Coordinador Académico</td>
+                            <td>
+                                <span class="teacher-admin-badge teacher-admin-badge-license">En Licencia</span>
+                            </td>
+                            <td>
+                                <div class="teacher-admin-actions d-flex justify-content-end gap-2">
+                                    <button type="button" class="btn teacher-admin-icon-btn">
+                                        <span class="material-symbols-outlined">visibility</span>
+                                    </button>
+                                    <button type="button" class="btn teacher-admin-icon-btn">
+                                        <span class="material-symbols-outlined">edit</span>
+                                    </button>
+                                    <button type="button" class="btn teacher-admin-icon-btn danger">
+                                        <span class="material-symbols-outlined">delete</span>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center gap-3">
+                                    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjzmnADeqq04iNDvMHVbiWg4m2pAcRQxi7e8czLD65x6lMEaqZjhw4kvaBbawhFLFl50HlHpY_VdMv8IkIblxawCbodG8437NcHp3evpQBttZIyELi3f6Zl1V4PB0vJpsoMPvN8qj8EmguTQVe9nskuH9vPh-LNyWVnPyA_Hv5IE4oaiV5-E4smAAIcxaXMGhrTEdKwf-NOS8-QC9rwc18Famyvghf-_U5SrDyehAYDr7IPkDzehk87wPxRgD33W5UXiHNET9E-ZKc"
+                                        alt="Docente" class="teacher-admin-avatar">
+                                    <div>
+                                        <p class="teacher-admin-name mb-0">Dr. Hugo Valle</p>
+                                        <p class="teacher-admin-subject mb-0">Física Aplicada</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <p class="teacher-admin-email mb-0">h.valle@slate.edu</p>
+                                <p class="teacher-admin-id mb-0">ID: SLT-35521</p>
+                            </td>
+                            <td class="teacher-admin-muted">Docente Senior</td>
+                            <td>
+                                <span class="teacher-admin-badge teacher-admin-badge-inactive">Inactivo</span>
+                            </td>
+                            <td>
+                                <div class="teacher-admin-actions d-flex justify-content-end gap-2">
+                                    <button type="button" class="btn teacher-admin-icon-btn">
+                                        <span class="material-symbols-outlined">visibility</span>
+                                    </button>
+                                    <button type="button" class="btn teacher-admin-icon-btn">
+                                        <span class="material-symbols-outlined">edit</span>
+                                    </button>
+                                    <button type="button" class="btn teacher-admin-icon-btn danger">
+                                        <span class="material-symbols-outlined">delete</span>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div
+                class="teacher-admin-pagination d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+                <span class="teacher-admin-pagination-text">Mostrando 1 a 4 de 24 maestros</span>
+
+                <div class="d-flex align-items-center gap-1">
+                    <button class="btn teacher-admin-page-btn icon" disabled>
+                        <span class="material-symbols-outlined">chevron_left</span>
+                    </button>
+                    <button class="btn teacher-admin-page-btn active">1</button>
+                    <button class="btn teacher-admin-page-btn">2</button>
+                    <button class="btn teacher-admin-page-btn">3</button>
+                    <span class="teacher-admin-dots">...</span>
+                    <button class="btn teacher-admin-page-btn">6</button>
+                    <button class="btn teacher-admin-page-btn icon">
+                        <span class="material-symbols-outlined">chevron_right</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-12 col-lg-4">
+                <div class="teacher-admin-stat-card stat-purple">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <p class="teacher-admin-stat-label purple mb-2">TOTAL MAESTROS</p>
+                            <h3 class="teacher-admin-stat-value mb-0">42</h3>
+                        </div>
+                        <div class="teacher-admin-stat-icon purple">
+                            <span class="material-symbols-outlined">person</span>
+                        </div>
+                    </div>
+                    <div class="teacher-admin-stat-footer">
+                        <span class="teacher-admin-stat-pill">+5.2%</span>
+                        <span class="teacher-admin-stat-note">vs. semestre anterior</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-lg-4">
+                <div class="teacher-admin-stat-card stat-blue">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <p class="teacher-admin-stat-label blue mb-2">TASA DE RETENCIÓN</p>
+                            <h3 class="teacher-admin-stat-value mb-0">98.4%</h3>
+                        </div>
+                        <div class="teacher-admin-stat-icon blue">
+                            <span class="material-symbols-outlined">verified</span>
+                        </div>
+                    </div>
+                    <div class="teacher-admin-stat-footer">
+                        <span class="teacher-admin-stat-pill">+1.0%</span>
+                        <span class="teacher-admin-stat-note">estabilidad excelente</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

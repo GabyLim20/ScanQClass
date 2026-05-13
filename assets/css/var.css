@@ -1,0 +1,41 @@
+:root {
+    --primary-color: #7a7ac4;
+    --primary-dark: #5b21b6;
+    --primary-light: #a78bfa;
+    --secondary-color: #9543ff;
+    --text-color: #0d0d25;
+    --text-muted: #bfbfbf;
+    --background-light: #f8f8f8;
+    --background-gray: #b1b1d3;
+    --background-dark: #5b5b60;
+    --white: #fff;
+    --shadow-light: 0 0 20px rgba(36, 39, 37, 0.3);
+    --shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    --shadow-box: 0 5px 15px rgba(0, 0, 0, 0.05);
+
+
+    --font-primary: 'Poppins', sans-serif;
+    --font-secondary: 'Playfair Display', serif;
+    --font-third: Georgia, 'Times New Roman', Times, serif --font-text: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+
+    --border-radius-sm: 5px;
+    --border-radius-md: 10px;
+    --border-radius-lg: 30px;
+    --btn-bg: var(--background-light);
+    --btn-color: var(--text-color);
+    --btn-hover-bg: var(--primary-color);
+    --btn-hover-color: #ffffff;
+    --btn-border-radius: var(--border-radius-lg);
+
+    --transition: all 0.3s ease;
+    --transition-smooth: all 0.8s cubic-bezier(0.22, 0.78, 0.45, 1.02);
+    --success: #10b981;
+    --warning: #f59e0b;
+    --error: #ef4444;
+    --info: #3b82f6;
+    --scrollbar-track: var(--text-muted);
+    --scrollbar-thumb: var(--primary-color);
+    --overlay-light: rgba(248, 248, 248, 0.96);
+    --overlay-dark: rgba(13, 13, 37, 0.5);
+}

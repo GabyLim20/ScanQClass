@@ -1,0 +1,14 @@
+node_modules/
+
+.env
+
+uploads/
+
+ScanQClass_backup_*
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+.DS_Store
+.vscode/
