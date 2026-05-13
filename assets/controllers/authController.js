@@ -2,13 +2,12 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
-const { development: appConfig } = require("../config/config.json");
 const { sequelize, User, DtInfo, Rol } = require("../models");
 const { normalizeUserEmail, isReservedSuperAdminEmail } = require("../utils/superAdmin");
 
 
-const JWT_SECRET = appConfig.JWT_SECRET;
-const JWT_EXPIRES_IN = appConfig.JWT_EXPIRES_IN || "8h";
+const JWT_SECRET = process.env.JWT_SECRET || "fallback_local_dev";
+const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || "1h";
 const RESET_TOKEN_TTL_MIN = parseInt(process.env.RESET_TOKEN_TTL_MIN || "30", 10);
 
 function roleFromEmail(email) {
@@ -280,6 +279,8 @@ const resetPassword = async (req, res) => {
       return res.status(400).json({ error: "Faltan parámetros (uid, token, newPassword)." });
     }
 
+    // trim() solo para validar que no sea visualmente vacía.
+    // El hash se hace sobre newPassword original, sin modificar.
     if (typeof newPassword !== "string" || newPassword.trim().length < 8) {
       return res.status(400).json({ error: "La contraseña debe tener al menos 8 caracteres." });
     }
@@ -289,22 +290,18 @@ const resetPassword = async (req, res) => {
       return res.status(400).json({ error: "Solicitud inválida." });
     }
 
-    // Verificar expiración antes de comparar el hash
     if (new Date(user.reset_token_expires).getTime() < Date.now()) {
       await user.update({ reset_token_hash: null, reset_token_expires: null });
       return res.status(400).json({ error: "El enlace ha expirado." });
     }
 
-    // Comparar SHA256
     const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
     if (tokenHash !== user.reset_token_hash) {
       return res.status(400).json({ error: "Token inválido." });
     }
 
-    // Hash sobre la contraseña original, sin trim().
     const hashed = await bcrypt.hash(newPassword, 10);
 
-    // Actualizar contraseña
     await user.update({
       password:            hashed,
       must_change_password: false,

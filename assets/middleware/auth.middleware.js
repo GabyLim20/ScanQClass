@@ -1,9 +1,8 @@
 const jwt = require("jsonwebtoken");
-const { development: appConfig } = require("../config/config.json");
 const { User } = require("../models");
 const { normalizeUserEmail, isReservedSuperAdminEmail } = require("../utils/superAdmin");
 
-const JWT_SECRET = appConfig.JWT_SECRET;
+const JWT_SECRET = process.env.JWT_SECRET || "fallback_local_dev";
 const PASSWORD_CHANGE_REQUIRED_CODE = "PASSWORD_CHANGE_REQUIRED";
 
 // Rol 1 = Admin | Rol 2 = Maestro | Rol 3 = Alumno

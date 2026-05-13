@@ -1,13 +1,10 @@
 const jwt  = require("jsonwebtoken");
 const QRCode = require("qrcode");
-const { development: appConfig } = require("../config/config.json");
 const { User, DtInfo, InfoStudent } = require("../models");
 
-const QR_SECRET     = appConfig.JWT_SECRET + "_qr";
+const QR_SECRET     = `${process.env.JWT_SECRET || "fallback_local_dev"}_qr`;
 const QR_EXPIRES_IN = "1m"; // QR válido 1 minuto
 
-
-// Verifica el JWT interno de un QR.
 const verifyQrToken = (rawToken) => {
   try {
     const decoded = jwt.verify(rawToken, QR_SECRET);
@@ -24,7 +21,7 @@ const generateStudentQr = async (req, res) => {
     const requesterRol = req.user?.rol;
     const targetUserId = requesterRol === 3 ? requesterId : id;
 
-    // Solo para alumno y estudiante
+    // Solo para alumno 
     if (requesterRol === 3 && Number(requesterId) !== Number(id)) {
       return res.status(403).json({ error: "Solo puedes ver tu propio QR." });
     }

@@ -1,4 +1,6 @@
 
+require("dotenv").config({ quiet: true });
+
 const express = require('express');
 const rateLimit = require('express-rate-limit');
 const path = require('path');
@@ -7,12 +9,12 @@ const routes = require('./assets/routes');
 const { sequelize } = require('./assets/models');
 
 const app = express();
-const port = 3000;
+const port = Number(process.env.PORT) || 3000;
 app.use(cors());
 
 const limiter = rateLimit({
-    windowMs: 10 * 60 * 1000,
-    max: 100,
+    windowMs: 10 * 60 * 1000, 
+    max: 100, 
 });
 app.use(limiter);
 app.use(express.json());
@@ -24,8 +26,8 @@ sequelize.authenticate()
         console.log('Conexión a la base de datos establecida correctamente.');
     })
     .catch((error) => {
-        console.error('Error al conectar a la base de datos:', error);
-    });
+    console.error('Error al conectar a la base de datos:', error);
+});
 app.listen(port, () => {
     console.log(`Servidor corriendo en http://localhost:${port}`);
 });
