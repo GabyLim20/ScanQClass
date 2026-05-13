@@ -19,6 +19,10 @@ const limiter = rateLimit({
 app.use(limiter);
 app.use(express.json());
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
+app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, "assets/views/index.html"));
+});
+
 app.use('/', routes);
 
 sequelize.authenticate()
