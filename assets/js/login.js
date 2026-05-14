@@ -1,5 +1,6 @@
 (() => {
-    const API_BASE = "http://localhost:3000";
+    //const API_BASE = "http://localhost:3000";
+    const API_BASE = "";
 
     const form = document.getElementById("login-form");
     const emailInput = document.getElementById("email");
@@ -118,7 +119,7 @@
             setTimeout(() => {
                 console.log("LOGIN RESPONSE:", data);
                 console.log("TOKEN:", data.token);
-                //redirectByRole(normalizeSessionUser(data.user));
+                redirectByRole(normalizeSessionUser(data.user));
             }, 400);
 
         } catch (error) {

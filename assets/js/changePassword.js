@@ -7,7 +7,9 @@
     const confirmPasswordInput = document.getElementById("confirmPassword");
     const logoutBtn = document.getElementById("logoutBtn");
     const toggleButtons = document.querySelectorAll("[data-toggle-password]");
-    const API_BASE = "http://localhost:3000";
+
+    //const API_BASE = "http://localhost:3000";
+    const API_BASE = "";
 
     function getToken() {
         return localStorage.getItem(TOKEN_KEY);
