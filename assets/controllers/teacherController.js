@@ -541,15 +541,14 @@ const takeAttendanceByQr = async (req, res) => {
       return res.status(404).json({ error: "Alumno no encontrado." });
     }
 
-    
-  const assignment = await InfoTeacher.findOne({
-  where: { user_id: teacherId, id_course: normalizedCourseId },
-  transaction: t
-});
-if (!assignment) {
-  await t.rollback();
-  return res.status(403).json({ error: "No estás asignado a este curso." });
-}
+    const assignment = await InfoTeacher.findOne({
+      where: { user_id: teacherId, id_course: normalizedCourseId },
+      transaction: t
+    });
+    if (!assignment) {
+      await t.rollback();
+      return res.status(403).json({ error: "No estás asignado a este curso." });
+    }
 
 
 
@@ -590,6 +589,12 @@ if (!assignment) {
     const attendanceStatus = mexicoNow > lateLimit ? "late" : "present";
 
     const todayDateKey = formatDateKeyMexico(serverNow);
+    const { session } = await findOrCreateSession(t, {
+      id_course: normalizedCourseId,
+      id_teacher: teacherId,
+      id_schedule: activeSchedule.id_schedule,
+      date: todayDateKey
+    });
 
     if (session.status === "CLOSED") {
       await t.rollback();
