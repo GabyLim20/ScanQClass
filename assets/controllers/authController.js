@@ -4,10 +4,10 @@ const crypto = require("crypto");
 const nodemailer = require("nodemailer");
 const { sequelize, User, DtInfo, Rol } = require("../models");
 const { normalizeUserEmail, isReservedSuperAdminEmail } = require("../utils/superAdmin");
+const { requireEnv } = require("../utils/env");
 
 
-const JWT_SECRET = process.env.JWT_SECRET || "fallback_local_dev";
-
+const JWT_SECRET = requireEnv("JWT_SECRET");
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || "1h";
 const RESET_TOKEN_TTL_MIN = parseInt(process.env.RESET_TOKEN_TTL_MIN || "30", 10);
 

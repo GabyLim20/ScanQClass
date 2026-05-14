@@ -1,8 +1,10 @@
 const jwt  = require("jsonwebtoken");
 const QRCode = require("qrcode");
 const { User, DtInfo, InfoStudent } = require("../models");
+const { requireEnv } = require("../utils/env");
 
-const QR_SECRET     = `${process.env.JWT_SECRET || "fallback_local_dev"}_qr`;
+
+const QR_SECRET     = `${requireEnv("JWT_SECRET")}_qr`;
 const QR_EXPIRES_IN = "1m"; // QR válido 1 minuto
 
 const verifyQrToken = (rawToken) => {

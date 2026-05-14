@@ -7,8 +7,11 @@ const path = require('path');
 const cors = require('cors');
 const routes = require('./assets/routes');
 const { sequelize } = require('./assets/models');
+const { requireEnv } = require('./assets/utils/env');
+
 
 const app = express();
+requireEnv("JWT_SECRET");
 app.set("trust proxy", 1);
 const port = Number(process.env.PORT) || 3000;
 app.use(cors());

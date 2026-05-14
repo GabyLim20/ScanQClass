@@ -1,13 +1,18 @@
 const jwt = require("jsonwebtoken");
 const { User } = require("../models");
 const { normalizeUserEmail, isReservedSuperAdminEmail } = require("../utils/superAdmin");
+const { requireEnv } = require("../utils/env");
 
-const JWT_SECRET = process.env.JWT_SECRET || "fallback_local_dev";
+
+const JWT_SECRET = requireEnv("JWT_SECRET");
 const PASSWORD_CHANGE_REQUIRED_CODE = "PASSWORD_CHANGE_REQUIRED";
+const AUTH_DEBUG_ENABLED = String(process.env.AUTH_DEBUG || "").trim().toLowerCase() === "true";
+
 
 // Rol 1 = Admin | Rol 2 = Maestro | Rol 3 = Alumno
 
 function logAuthDebug(message, meta = {}) {
+    if (!AUTH_DEBUG_ENABLED) return;
     console.info("[auth.middleware]", message, meta);
 }
 

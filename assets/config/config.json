@@ -1,16 +1,10 @@
-
 {
-    
     "development": {
         "username": "root",
         "password": "",
         "database": "ScanQClass",
         "host": "127.0.0.1",
         "dialect": "mysql",
-        "JWT_SECRET": "0ontr0l3sC0lAr",
         "JWT_EXPIRES_IN": "2h"
     }
-    
 }
-
-
