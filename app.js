@@ -17,10 +17,16 @@ const port = Number(process.env.PORT) || 3000;
 app.use(cors());
 
 const limiter = rateLimit({
-    windowMs: 10 * 60 * 1000, 
-    max: 100, 
+    windowMs: 10 * 60 * 1000, // 10 minutos
+    max: 2000,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: {
+        error: "Demasiadas solicitudes, intenta más tarde."
+    }
 });
-app.use(limiter);
+app.use("/login", limiter);
+app.use("/auth", limiter);
 app.use(express.json());
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
 app.get("/", (req, res) => {
