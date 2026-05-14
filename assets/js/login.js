@@ -116,7 +116,9 @@
             showAlert(data?.mensaje || "Inicio de sesión exitoso.", "success");
 
             setTimeout(() => {
-                redirectByRole(normalizeSessionUser(data.user));
+                console.log("LOGIN RESPONSE:", data);
+                console.log("TOKEN:", data.token);
+                //redirectByRole(normalizeSessionUser(data.user));
             }, 400);
 
         } catch (error) {
