@@ -7,6 +7,11 @@ const { normalizeUserEmail, isReservedSuperAdminEmail } = require("../utils/supe
 
 
 const JWT_SECRET = process.env.JWT_SECRET || "fallback_local_dev";
+console.log("[JWT LOGIN]", {
+    length: JWT_SECRET.length,
+    start: JWT_SECRET.slice(0, 3),
+    end: JWT_SECRET.slice(-3)
+});
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || "1h";
 const RESET_TOKEN_TTL_MIN = parseInt(process.env.RESET_TOKEN_TTL_MIN || "30", 10);
 

@@ -4,6 +4,11 @@ const { normalizeUserEmail, isReservedSuperAdminEmail } = require("../utils/supe
 
 const JWT_SECRET = process.env.JWT_SECRET || "fallback_local_dev";
 const PASSWORD_CHANGE_REQUIRED_CODE = "PASSWORD_CHANGE_REQUIRED";
+console.log("[JWT LOGIN]", {
+    length: JWT_SECRET.length,
+    start: JWT_SECRET.slice(0, 3),
+    end: JWT_SECRET.slice(-3)
+});
 
 // Rol 1 = Admin | Rol 2 = Maestro | Rol 3 = Alumno
 
