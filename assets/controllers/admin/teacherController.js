@@ -84,7 +84,7 @@ const createTeacher = async (req, res) => {
     const hashed = await bcrypt.hash(passwordPlano, 10);
 
     const user = await User.create(
-      { email: cleanEmail, password: hashed, level: ROLE_TEACHER },
+      { email: cleanEmail, password: hashed, level: ROLE_TEACHER,must_change_password: true},
       { transaction: t }
     );
 

@@ -360,7 +360,7 @@ const createStudent = async (req, res) => {
         const hashedPassword = await bcrypt.hash(passwordPlano, 10);
 
         const user = await User.create(
-            { email: cleanEmail, password: hashedPassword, level: ROLE_STUDENT },
+            { email: cleanEmail, password: hashedPassword, level: ROLE_STUDENT,must_change_password: true },
             { transaction: t }
         );
 
