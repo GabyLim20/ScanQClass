@@ -151,7 +151,7 @@ function resolveActiveSchedule(schedules, nowInSeconds, debugContext = null) {
   const activeSchedule = findActiveSchedule(schedules, nowInSeconds, debugContext);
   if (activeSchedule) return activeSchedule;
 
-  let closest = schedules[0];
+  let closest     = schedules[0];
   let minDistance = Infinity;
 
   for (const s of schedules) {
@@ -163,7 +163,7 @@ function resolveActiveSchedule(schedules, nowInSeconds, debugContext = null) {
 
     if (distance < minDistance) {
       minDistance = distance;
-      closest = s;
+      closest     = s;
     }
   }
 
@@ -198,8 +198,8 @@ function calculateAttendancePercentage(rows = []) {
 
 async function findOrCreateSession(t, { id_course, id_teacher, id_schedule, date }) {
   const where = {
-    id_course: Number(id_course),
-    id_teacher: Number(id_teacher),
+    id_course:   Number(id_course),
+    id_teacher:  Number(id_teacher),
     id_schedule: Number(id_schedule),
     date
   };
@@ -209,12 +209,12 @@ async function findOrCreateSession(t, { id_course, id_teacher, id_schedule, date
 
   const session = await AttendanceSession.create(
     {
-      id_course: Number(id_course),
-      id_teacher: Number(id_teacher),
+      id_course:   Number(id_course),
+      id_teacher:  Number(id_teacher),
       id_schedule: Number(id_schedule),
       date,
-      status: "OPEN",
-      opened_at: new Date()
+      status:      "OPEN",
+      opened_at:   new Date()
     },
     { transaction: t }
   );
@@ -541,15 +541,15 @@ const takeAttendanceByQr = async (req, res) => {
       return res.status(404).json({ error: "Alumno no encontrado." });
     }
 
-
-    const assignment = await InfoTeacher.findOne({
-      where: { user_id: teacherId, id_course: normalizedCourseId },
-      transaction: t
-    });
-    if (!assignment) {
-      await t.rollback();
-      return res.status(403).json({ error: "No estás asignado a este curso." });
-    }
+    
+  const assignment = await InfoTeacher.findOne({
+  where: { user_id: teacherId, id_course: normalizedCourseId },
+  transaction: t
+});
+if (!assignment) {
+  await t.rollback();
+  return res.status(403).json({ error: "No estás asignado a este curso." });
+}
 
 
 
@@ -559,7 +559,7 @@ const takeAttendanceByQr = async (req, res) => {
     const dayName = getCurrentMexicoDayName(serverNow);
     const todaySchedules = await CourseSchedule.findAll({
       where: {
-        id_course: normalizedCourseId,
+        id_course:   normalizedCourseId,
         day_of_week: dayName
       },
       attributes: ["id_schedule", "start_time", "end_time"],
@@ -591,22 +591,10 @@ const takeAttendanceByQr = async (req, res) => {
 
     const todayDateKey = formatDateKeyMexico(serverNow);
 
-    const attendance = await Attendance.create(
-      {
-        user_id: studentId,
-        id_teacher: assignment.id_teacher,
-        id_course: normalizedCourseId,
-        date: todayDateKey,
-        status: attendanceStatus,
-        id_session: session.id_session
-      },
-      { transaction: t }
-    );
-
     if (session.status === "CLOSED") {
       await t.rollback();
       return res.status(409).json({
-        error: "La asistencia de esta clase ya está cerrada.",
+        error:      "La asistencia de esta clase ya está cerrada.",
         id_session: session.id_session,
         session_status: "CLOSED"
       });
@@ -624,7 +612,7 @@ const takeAttendanceByQr = async (req, res) => {
     // Registro unico para cada alumno dentro de la misma sesión.
     const existing = await Attendance.findOne({
       where: {
-        user_id: studentId,
+        user_id:   studentId,
         id_session: session.id_session
       },
       transaction: t
@@ -643,11 +631,11 @@ const takeAttendanceByQr = async (req, res) => {
 
     const attendance = await Attendance.create(
       {
-        user_id: studentId,
-        id_teacher: assignment.id_teacher,
-        id_course: normalizedCourseId,
-        date: today,
-        status: attendanceStatus,
+        user_id:    studentId,
+        id_teacher: assignment.id_teacher,  
+        id_course:  normalizedCourseId,
+        date:       todayDateKey,
+        status:     attendanceStatus,
         id_session: session.id_session
       },
       { transaction: t }
@@ -661,7 +649,7 @@ const takeAttendanceByQr = async (req, res) => {
       attendance,
       session: {
         id_session: session.id_session,
-        status: session.status
+        status:     session.status
       }
     });
   } catch (err) {
@@ -735,17 +723,17 @@ const closeAttendance = async (req, res) => {
     });
 
     const startDay = new Date(y, m - 1, d, 0, 0, 0, 0);
-    const endDay = new Date(y, m - 1, d, 23, 59, 59, 999);
+    const endDay   = new Date(y, m - 1, d, 23, 59, 59, 999);
 
     const attendanceRows = await Attendance.findAll({
-      where: {
-        id_course: Number(id_course),
-        id_teacher: assignment.id_teacher,
-        date: { [Op.between]: [startDay, endDay] }
-      },
-      attributes: ["user_id"],
-      transaction: t
-    });
+  where: {
+    id_course: Number(id_course),
+    id_teacher: assignment.id_teacher,
+    date: { [Op.between]: [startDay, endDay] }
+  },
+  attributes: ["user_id"],
+  transaction: t
+});
 
     const recordedIds = new Set(attendanceRows.map(row => Number(row.user_id)));
     const missingIds = enrollments
@@ -805,18 +793,18 @@ const closeAttendance = async (req, res) => {
 
     const absenceCounts = createdUserIds.length > 0
       ? await Attendance.findAll({
-        where: {
-          id_course: Number(id_course),
-          user_id: { [Op.in]: createdUserIds },
-          status: "absent"
-        },
-        attributes: [
-          "user_id",
-          [sequelize.fn("COUNT", sequelize.col("id_attendance")), "absence_count"]
-        ],
-        group: ["user_id"],
-        transaction: t
-      })
+          where: {
+            id_course: Number(id_course),
+            user_id: { [Op.in]: createdUserIds },
+            status: "absent"
+          },
+          attributes: [
+            "user_id",
+            [sequelize.fn("COUNT", sequelize.col("id_attendance")), "absence_count"]
+          ],
+          group: ["user_id"],
+          transaction: t
+        })
       : [];
 
     const absenceCountMap = new Map(
@@ -873,12 +861,12 @@ const closeAttendance = async (req, res) => {
 const uploadCoursePdf = async (req, res) => {
   try {
     const teacherId = req.user?.id;
-    const { id } = req.params;
+    const { id } = req.params; 
     const file = req.file;
 
     if (!teacherId) return res.status(401).json({ error: "No autenticado." });
-    if (!id) return res.status(400).json({ error: "Falta el id del curso." });
-    if (!file) return res.status(400).json({ error: "No se envió ningún archivo PDF." });
+    if (!id)        return res.status(400).json({ error: "Falta el id del curso." });
+    if (!file)      return res.status(400).json({ error: "No se envió ningún archivo PDF." });
 
     const assignment = await InfoTeacher.findOne({ where: { user_id: teacherId, id_course: Number(id) } });
     if (!assignment) {
@@ -887,7 +875,7 @@ const uploadCoursePdf = async (req, res) => {
 
     const pdf = await Pdf.create({
       id_course: Number(id),
-      filename: file.originalname,
+      filename:  file.originalname,
       mime_type: file.mimetype,
       file_data: file.buffer
     });
@@ -895,10 +883,10 @@ const uploadCoursePdf = async (req, res) => {
     return res.status(201).json({
       message: "PDF subido correctamente.",
       pdf: {
-        id: pdf.id,
-        id_course: pdf.id_course,
-        filename: pdf.filename,
-        mime_type: pdf.mime_type,
+        id:          pdf.id,
+        id_course:   pdf.id_course,
+        filename:    pdf.filename,
+        mime_type:   pdf.mime_type,
         uploaded_at: pdf.uploaded_at
       }
     });
@@ -917,12 +905,12 @@ const listClassPdfs = async (req, res) => {
     const { id } = req.params;
 
     if (!teacherId) return res.status(401).json({ error: "No autenticado." });
-    if (!id) return res.status(400).json({ error: "Falta el id del curso." });
+    if (!id)        return res.status(400).json({ error: "Falta el id del curso." });
 
     const pdfs = await Pdf.findAll({
-      where: { id_course: Number(id) },
+      where:      { id_course: Number(id) },
       attributes: ["id", "id_course", "filename", "mime_type", "uploaded_at"],
-      order: [["uploaded_at", "DESC"]]
+      order:      [["uploaded_at", "DESC"]]
     });
 
     return res.status(200).json(pdfs);
@@ -958,7 +946,7 @@ const downloadClassPdf = async (req, res) => {
     }
 
     res.setHeader("Content-Type", pdf.mime_type || "application/pdf");
-    res.setHeader("Content-Disposition", `inline; filename="${pdf.filename || `curso-${id}.pdf`}"`); return res.send(pdf.file_data);
+res.setHeader("Content-Disposition", `inline; filename="${pdf.filename || `curso-${id}.pdf`}"`);    return res.send(pdf.file_data);
   } catch (err) {
     console.error("downloadClassPdf error:", err);
     return res.status(500).json({ error: "Error al descargar el PDF." });
@@ -1004,17 +992,17 @@ const deleteClassPdf = async (req, res) => {
 const getClassHistory = async (req, res) => {
   try {
     const teacherId = req.user?.id;
-    const { id } = req.params;
+    const { id } = req.params;  
     const { month } = req.query; // formato: YYYY-MM
-
+    
     if (!teacherId) return res.status(401).json({ error: "No autenticado." });
-    if (!id) return res.status(400).json({ error: "Falta el id del curso." });
+    if (!id)        return res.status(400).json({ error: "Falta el id del curso." });
     const assignment = await InfoTeacher.findOne({
-      where: { user_id: teacherId, id_course: Number(id) }
-    });
-    if (!assignment) {
-      return res.status(403).json({ error: "No estás asignado a este curso." });
-    }
+  where: { user_id: teacherId, id_course: Number(id) }
+});
+if (!assignment) {
+  return res.status(403).json({ error: "No estás asignado a este curso." });
+}
 
     if (!month || !/^\d{4}-\d{2}$/.test(month)) {
       return res.status(400).json({ error: "Debes enviar el mes en formato YYYY-MM. Ejemplo: 2026-03" });
@@ -1025,7 +1013,7 @@ const getClassHistory = async (req, res) => {
       return res.status(400).json({ error: "El mes no es válido." });
     }
     const startDate = new Date(year, monthNum - 1, 1, 0, 0, 0, 0);
-    const endDate = new Date(year, monthNum, 0, 23, 59, 59, 999);
+    const endDate   = new Date(year, monthNum, 0, 23, 59, 59, 999);
 
     const course = await Course.findByPk(id, {
       attributes: ["id_course", "name_subject"]
@@ -1034,9 +1022,9 @@ const getClassHistory = async (req, res) => {
 
     const attendanceRows = await Attendance.findAll({
       where: {
-        id_course: id,
+        id_course:  id,
         id_teacher: assignment.id_teacher,
-        date: { [Op.between]: [startDate, endDate] }
+        date:       { [Op.between]: [startDate, endDate] }
       },
       attributes: [
         "id_attendance",
@@ -1056,7 +1044,7 @@ const getClassHistory = async (req, res) => {
     });
 
     const enrollments = await Enrollment.findAll({
-      where: { id_course: id },
+      where:      { id_course: id },
       attributes: ["user_id"]
     });
 
@@ -1067,7 +1055,7 @@ const getClassHistory = async (req, res) => {
     studentIds = [...new Set(studentIds)];
 
     const profiles = await DtInfo.findAll({
-      where: { user_id: { [Op.in]: studentIds.length ? studentIds : [0] } },
+      where:      { user_id: { [Op.in]: studentIds.length ? studentIds : [0] } },
       attributes: ["user_id", "name", "lastname"]
     });
 
@@ -1083,8 +1071,8 @@ const getClassHistory = async (req, res) => {
     const studentMap = {};
     for (const userId of studentIds) {
       studentMap[userId] = {
-        user_id: userId,
-        nombre: profileMap[userId] || `Alumno ${userId}`,
+        user_id:     userId,
+        nombre:      profileMap[userId] || `Alumno ${userId}`,
         asistencias: {}
       };
     }
@@ -1094,8 +1082,8 @@ const getClassHistory = async (req, res) => {
       if (!dateKey) continue;
       if (!studentMap[row.user_id]) {
         studentMap[row.user_id] = {
-          user_id: row.user_id,
-          nombre: profileMap[row.user_id] || `Alumno ${row.user_id}`,
+          user_id:     row.user_id,
+          nombre:      profileMap[row.user_id] || `Alumno ${row.user_id}`,
           asistencias: {}
         };
       }
@@ -1107,10 +1095,10 @@ const getClassHistory = async (req, res) => {
           ? "justified"
           : row.status;
       studentMap[row.user_id].asistencias[dateKey] = {
-        status: row.status,
-        display_status: displayStatus,
-        justification_text: getJustificationOriginalText(row),
-        justification_image: row.justification_image || null,
+        status:                row.status,
+        display_status:        displayStatus,
+        justification_text:    getJustificationOriginalText(row),
+        justification_image:   row.justification_image || null,
         justification_image_url: row.justification_image ? `/attendance/justifications/${row.id_attendance}/image` : null,
         justification_ai_result: getJustificationAiResult(row),
         justification_ai_score: getJustificationAiScore(row),
@@ -1123,14 +1111,14 @@ const getClassHistory = async (req, res) => {
           ai_confidence: getJustificationAiScore(row),
           ai_comment: getJustificationAiComment(row)
         },
-        justified_at: row.justified_at || null
+        justified_at:          row.justified_at || null
       };
     }
 
     return res.status(200).json({
-      curso: { id_course: course.id_course, name_subject: course.name_subject },
+      curso:   { id_course: course.id_course, name_subject: course.name_subject },
       month,
-      fechas: uniqueDates,
+      fechas:  uniqueDates,
       alumnos: Object.values(studentMap)
     });
   } catch (err) {
@@ -1160,39 +1148,39 @@ const justifyAttendance = async (req, res) => {
 
     // Verificar que el maestro esté asignado al curso
     const assignment = await InfoTeacher.findOne({
-      where: { user_id: teacherId, id_course: Number(id_course) },
-      transaction: t
-    });
+  where: { user_id: teacherId, id_course: Number(id_course) },
+  transaction: t
+});
     if (!assignment) {
-      await t.rollback();
-      return res.status(403).json({ error: "No estás asignado a este curso." });
-    }
+  await t.rollback();
+  return res.status(403).json({ error: "No estás asignado a este curso." });
+}
 
     // Buscar el registro de asistencia del día
     if (!/^\d{4}-\d{2}-\d{2}$/.test(String(date))) {
-      await t.rollback();
-      return res.status(400).json({ error: "La fecha debe tener formato YYYY-MM-DD." });
-    }
+  await t.rollback();
+  return res.status(400).json({ error: "La fecha debe tener formato YYYY-MM-DD." });
+}
 
-    const [y, m, d] = String(date).split("-").map(Number);
-    const testDate = new Date(y, m - 1, d);
+const [y, m, d] = String(date).split("-").map(Number);
+const testDate = new Date(y, m - 1, d);
 
-    if (
-      testDate.getFullYear() !== y ||
-      testDate.getMonth() !== m - 1 ||
-      testDate.getDate() !== d
-    ) {
-      await t.rollback();
-      return res.status(400).json({ error: "La fecha no es válida." });
-    }
+if (
+  testDate.getFullYear() !== y ||
+  testDate.getMonth() !== m - 1 ||
+  testDate.getDate() !== d
+) {
+  await t.rollback();
+  return res.status(400).json({ error: "La fecha no es válida." });
+}
     const startDay = new Date(y, m - 1, d, 0, 0, 0, 0);
-    const endDay = new Date(y, m - 1, d, 23, 59, 59, 999);
+    const endDay   = new Date(y, m - 1, d, 23, 59, 59, 999);
 
     const record = await Attendance.findOne({
       where: {
-        user_id: Number(user_id),
+        user_id:   Number(user_id),
         id_course: Number(id_course),
-        date: { [Op.between]: [startDay, endDay] }
+        date:      { [Op.between]: [startDay, endDay] }
       },
       transaction: t
     });
@@ -1424,11 +1412,11 @@ const getSessionToday = async (req, res) => {
     return res.status(200).json({
       session: session
         ? {
-          id_session: session.id_session,
-          status: session.status,
-          opened_at: session.opened_at,
-          closed_at: session.closed_at
-        }
+            id_session: session.id_session,
+            status:     session.status,
+            opened_at:  session.opened_at,
+            closed_at:  session.closed_at
+          }
         : null
     });
   } catch (err) {
@@ -1443,7 +1431,7 @@ const getSessionToday = async (req, res) => {
 const closeAttendanceSession = async (req, res) => {
   const t = await sequelize.transaction();
   try {
-    const teacherId = req.user?.id;
+    const teacherId    = req.user?.id;
     const sessionIdNum = Number(req.params.id_session);
 
     if (!teacherId) {
@@ -1471,7 +1459,7 @@ const closeAttendanceSession = async (req, res) => {
       await t.rollback();
       return res.status(409).json({ error: "Esta sesión ya está cerrada." });
     }
-    const today = formatDateKeyMexico(new Date());
+    const today       = formatDateKeyMexico(new Date());
     const sessionDate = typeof session.date === "string"
       ? session.date.slice(0, 10)
       : formatDateKeyMexico(session.date);
@@ -1484,7 +1472,7 @@ const closeAttendanceSession = async (req, res) => {
     }
     const assignment = await InfoTeacher.findOne({
       where: {
-        user_id: Number(teacherId),
+        user_id:   Number(teacherId),
         id_course: Number(session.id_course)
       },
       attributes: ["id_teacher"],
@@ -1498,23 +1486,23 @@ const closeAttendanceSession = async (req, res) => {
       });
     }
 
-    const legacyTeacherId = assignment.id_teacher;
+    const legacyTeacherId = assignment.id_teacher;   
     const enrollments = await Enrollment.findAll({
-      where: { id_course: Number(session.id_course) },
+      where:      { id_course: Number(session.id_course) },
       attributes: ["user_id"],
       transaction: t
     });
 
     const enrolledUserIds = enrollments.map(e => Number(e.user_id));
-    const totalEnrolled = enrolledUserIds.length;
+    const totalEnrolled   = enrolledUserIds.length;
 
     const existingRows = await Attendance.findAll({
-      where: { id_session: sessionIdNum },
+      where:      { id_session: sessionIdNum },
       attributes: ["user_id"],
       transaction: t
     });
 
-    const attendedSet = new Set(existingRows.map(a => Number(a.user_id)));
+    const attendedSet     = new Set(existingRows.map(a => Number(a.user_id)));
     const existingRecords = attendedSet.size;
 
     // Crear faltas para alumnos sin registro
@@ -1523,11 +1511,11 @@ const closeAttendanceSession = async (req, res) => {
     const absentRows = enrolledUserIds
       .filter(uid => !attendedSet.has(uid))
       .map(uid => ({
-        user_id: uid,
-        id_teacher: legacyTeacherId,
-        id_course: Number(session.id_course),
-        date: absenceDate,
-        status: "absent",
+        user_id:    uid,
+        id_teacher: legacyTeacherId,      
+        id_course:  Number(session.id_course),
+        date:       absenceDate,
+        status:     "absent",
         id_session: sessionIdNum
       }));
 
@@ -1535,7 +1523,7 @@ const closeAttendanceSession = async (req, res) => {
 
     if (absencesCreated > 0) {
       await Attendance.bulkCreate(absentRows, {
-        validate: true,
+        validate:    true,
         transaction: t
       });
     }
@@ -1552,8 +1540,8 @@ const closeAttendanceSession = async (req, res) => {
       message: "Asistencia cerrada correctamente.",
       session: {
         id_session: session.id_session,
-        status: "CLOSED",
-        closed_at: closedAt
+        status:     "CLOSED",
+        closed_at:  closedAt
       },
       summary: {
         totalEnrolled,
