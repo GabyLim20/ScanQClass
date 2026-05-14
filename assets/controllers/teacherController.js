@@ -28,10 +28,39 @@ const { sendMailSafe, isMailConfigured } = require("../utils/mail");
 
 const LATE_TOLERANCE_MINUTES = 20;
 const DAY_NAMES = ["Domingo", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado"];
+const MEXICO_TIME_ZONE = "America/Mexico_City";
+const SCHEDULE_DEBUG_ENABLED = String(process.env.SCHEDULE_DEBUG || "").trim().toLowerCase() === "true";
+
+function getMexicoDateTimeParts(dateValue = new Date()) {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: MEXICO_TIME_ZONE,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false
+  }).formatToParts(new Date(dateValue));
+
+  return {
+    year: Number(parts.find(p => p.type === "year")?.value || 0),
+    month: Number(parts.find(p => p.type === "month")?.value || 0),
+    day: Number(parts.find(p => p.type === "day")?.value || 0),
+    hour: Number(parts.find(p => p.type === "hour")?.value || 0),
+    minute: Number(parts.find(p => p.type === "minute")?.value || 0),
+    second: Number(parts.find(p => p.type === "second")?.value || 0)
+  };
+}
+
+function getCurrentMexicoDateTime(dateValue = new Date()) {
+  const parts = getMexicoDateTimeParts(dateValue);
+  return new Date(parts.year, parts.month - 1, parts.day, parts.hour, parts.minute, parts.second, 0);
+}
 
 function formatDateKeyMexico(dateValue) {
   const parts = new Intl.DateTimeFormat("en-CA", {
-    timeZone: "America/Mexico_City",
+    timeZone: MEXICO_TIME_ZONE,
     year: "numeric",
     month: "2-digit",
     day: "2-digit"
@@ -45,7 +74,13 @@ function formatDateKeyMexico(dateValue) {
 }
 
 function getCurrentMexicoDayName(dateValue = new Date()) {
-  return DAY_NAMES[new Date(dateValue).getDay()] || null;
+  return new Intl.DateTimeFormat("es-MX", {
+    timeZone: MEXICO_TIME_ZONE,
+    weekday: "long"
+  }).format(new Date(dateValue))
+    .replace(/^\w/, letter => letter.toUpperCase())
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
 }
 
 function buildScheduleDate(baseDate, timeValue) {
@@ -63,29 +98,68 @@ function buildScheduleDate(baseDate, timeValue) {
   );
 }
 
-function findActiveSchedule(schedules, now) {
+function getTimeValueInSeconds(timeValue) {
+  const [hours = 0, minutes = 0, seconds = 0] = String(timeValue || "00:00:00")
+    .split(":")
+    .map(Number);
+  return (hours * 3600) + (minutes * 60) + seconds;
+}
+
+function formatSecondsAsTime(totalSeconds = 0) {
+  const safe = Math.max(0, Number(totalSeconds) || 0);
+  const hours = Math.floor(safe / 3600);
+  const minutes = Math.floor((safe % 3600) / 60);
+  const seconds = safe % 60;
+  return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+}
+
+function getMexicoNowInSeconds(dateValue = new Date()) {
+  const parts = getMexicoDateTimeParts(dateValue);
+  return (parts.hour * 3600) + (parts.minute * 60) + parts.second;
+}
+
+function logScheduleCheck(context, payload) {
+  if (!SCHEDULE_DEBUG_ENABLED) return;
+  console.log(`[schedule-check] ${context}`, payload);
+}
+
+function findActiveSchedule(schedules, nowInSeconds, debugContext = null) {
   for (const s of schedules) {
-    const start = buildScheduleDate(now, s.start_time);
-    const end = buildScheduleDate(now, s.end_time);
-    if (now >= start && now <= end) return s;
+    const startInSeconds = getTimeValueInSeconds(s.start_time);
+    const endInSeconds = getTimeValueInSeconds(s.end_time);
+    const isActive = nowInSeconds >= startInSeconds && nowInSeconds <= endInSeconds;
+
+    if (debugContext) {
+      logScheduleCheck(debugContext, {
+        timezone: MEXICO_TIME_ZONE,
+        serverNowIso: new Date().toISOString(),
+        serverTimezone: Intl.DateTimeFormat().resolvedOptions().timeZone || process.env.TZ || "unknown",
+        mexicoNow: formatSecondsAsTime(nowInSeconds),
+        start: String(s.start_time || ""),
+        end: String(s.end_time || ""),
+        isActive
+      });
+    }
+
+    if (isActive) return s;
   }
 
   return null;
 }
 
-function resolveActiveSchedule(schedules, now) {
-  const activeSchedule = findActiveSchedule(schedules, now);
+function resolveActiveSchedule(schedules, nowInSeconds, debugContext = null) {
+  const activeSchedule = findActiveSchedule(schedules, nowInSeconds, debugContext);
   if (activeSchedule) return activeSchedule;
 
   let closest     = schedules[0];
   let minDistance = Infinity;
 
   for (const s of schedules) {
-    const start    = buildScheduleDate(now, s.start_time);
-    const end      = buildScheduleDate(now, s.end_time);
-    const distance = now < start
-      ? start.getTime() - now.getTime()
-      : now.getTime() - end.getTime();
+    const startInSeconds = getTimeValueInSeconds(s.start_time);
+    const endInSeconds = getTimeValueInSeconds(s.end_time);
+    const distance = nowInSeconds < startInSeconds
+      ? startInSeconds - nowInSeconds
+      : nowInSeconds - endInSeconds;
 
     if (distance < minDistance) {
       minDistance = distance;
@@ -479,8 +553,10 @@ if (!assignment) {
 
 
 
-    const today = new Date();
-    const dayName = getCurrentMexicoDayName(today);
+    const serverNow = new Date();
+    const mexicoNow = getCurrentMexicoDateTime(serverNow);
+    const nowInSeconds = getMexicoNowInSeconds(serverNow);
+    const dayName = getCurrentMexicoDayName(serverNow);
     const todaySchedules = await CourseSchedule.findAll({
       where: {
         id_course:   normalizedCourseId,
@@ -499,17 +575,21 @@ if (!assignment) {
       });
     }
 
-    const activeSchedule = findActiveSchedule(todaySchedules, today);
+    const activeSchedule = findActiveSchedule(
+      todaySchedules,
+      nowInSeconds,
+      `takeAttendanceByQr course=${normalizedCourseId}`
+    );
     if (!activeSchedule) {
       await t.rollback();
       return res.status(400).json({ error: "No hay clase activa en este momento" });
     }
 
-    const classStart = buildScheduleDate(today, activeSchedule.start_time);
+    const classStart = buildScheduleDate(mexicoNow, activeSchedule.start_time);
     const lateLimit = new Date(classStart.getTime() + LATE_TOLERANCE_MINUTES * 60 * 1000);
-    const attendanceStatus = today > lateLimit ? "late" : "present";
+    const attendanceStatus = mexicoNow > lateLimit ? "late" : "present";
 
-    const todayDateKey = formatDateKeyMexico(today);
+    const todayDateKey = formatDateKeyMexico(serverNow);
 
     const { session } = await findOrCreateSession(t, {
       id_course:   normalizedCourseId,
@@ -1303,8 +1383,9 @@ const getSessionToday = async (req, res) => {
       return res.status(400).json({ error: "id_course no válido." });
     }
 
-    const now = new Date();
-    const dayName = getCurrentMexicoDayName(now);
+    const serverNow = new Date();
+    const nowInSeconds = getMexicoNowInSeconds(serverNow);
+    const dayName = getCurrentMexicoDayName(serverNow);
     const todaySchedules = await CourseSchedule.findAll({
       where: {
         id_course,
@@ -1318,8 +1399,12 @@ const getSessionToday = async (req, res) => {
       return res.status(200).json({ session: null });
     }
 
-    const resolvedSchedule = resolveActiveSchedule(todaySchedules, now);
-    const today = formatDateKeyMexico(now);
+    const resolvedSchedule = resolveActiveSchedule(
+      todaySchedules,
+      nowInSeconds,
+      `getSessionToday course=${id_course}`
+    );
+    const today = formatDateKeyMexico(serverNow);
 
     const session = await AttendanceSession.findOne({
       where: {
