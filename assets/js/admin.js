@@ -31,8 +31,12 @@ function saveStoredUser(user) {
     localStorage.setItem(USER_KEY, JSON.stringify(user));
 }
 
+function normalizeIsSuperAdmin(value) {
+    return value === true || value === 1 || value === "1";
+}
+
 function isSuperAdmin() {
-    return Boolean(getStoredUser()?.is_super_admin);
+    return normalizeIsSuperAdmin(getStoredUser()?.is_super_admin);
 }
 
 function canManageAdminResources() {
@@ -379,7 +383,9 @@ function renderStudents() {
 
 function openStudentHistory(id) {
     if (!id) return;
-    window.location.href = `/assets/views/admin/student-history.html?id=${encodeURIComponent(id)}`;
+    const currentSection = String(window.location.hash || "").replace("#", "");
+    const fromSection = currentSection || "students";
+    window.location.href = `/assets/views/admin/student-history.html?id=${encodeURIComponent(id)}&from=${encodeURIComponent(fromSection)}`;
 }
 
 async function openEditStudent(id) {

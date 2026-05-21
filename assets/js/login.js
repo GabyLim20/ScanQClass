@@ -1,6 +1,5 @@
 (() => {
-    //const API_BASE = "http://localhost:3000";
-    const API_BASE = "";
+    const API_BASE = window.location.origin;
 
     const form = document.getElementById("login-form");
     const emailInput = document.getElementById("email");
@@ -23,6 +22,10 @@
         box.textContent = message;
     }
 
+    function normalizeIsSuperAdmin(value) {
+        return value === true || value === 1 || value === "1";
+    }
+
     function normalizeSessionUser(user) {
         return {
             id: user?.id ?? null,
@@ -32,7 +35,7 @@
             name: user?.name || "",
             lastname: user?.lastname || "",
             must_change_password: Boolean(user?.must_change_password),
-            is_super_admin: Boolean(user?.is_super_admin)
+            is_super_admin: normalizeIsSuperAdmin(user?.is_super_admin)
         };
     }
 
@@ -117,8 +120,6 @@
             showAlert(data?.mensaje || "Inicio de sesión exitoso.", "success");
 
             setTimeout(() => {
-                console.log("LOGIN RESPONSE:", data);
-                console.log("TOKEN:", data.token);
                 redirectByRole(normalizeSessionUser(data.user));
             }, 400);
 

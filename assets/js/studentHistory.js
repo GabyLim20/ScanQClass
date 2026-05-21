@@ -2,6 +2,7 @@
 
 const TOKEN_KEY = "token";
 const USER_KEY = "user";
+const LIMITED_ADMIN_SECTIONS = ["dashboard", "students", "statistics"];
 
 function getToken() {
   return localStorage.getItem(TOKEN_KEY);
@@ -27,6 +28,18 @@ function saveStoredUser(user) {
 
 function redirectToPasswordChange() {
   window.location.href = "/assets/views/changePassword.html";
+}
+
+function normalizeIsSuperAdmin(value) {
+  return value === true || value === 1 || value === "1";
+}
+
+function isSuperAdmin() {
+  return normalizeIsSuperAdmin(getStoredUser()?.is_super_admin);
+}
+
+function canManageAdminResources() {
+  return isSuperAdmin();
 }
 
 function authHeaders() {
@@ -79,6 +92,16 @@ function getStudentIdFromQuery() {
   return new URLSearchParams(window.location.search).get("id");
 }
 
+function getReturnSectionFromQuery() {
+  const value = new URLSearchParams(window.location.search).get("from");
+  if (canManageAdminResources()) {
+    return ["dashboard", "teachers", "students", "classes", "enrollments", "statistics"].includes(String(value || ""))
+      ? String(value)
+      : "students";
+  }
+  return ["dashboard", "students", "statistics"].includes(String(value || "")) ? String(value) : "students";
+}
+
 function setText(id, value) {
   const el = document.getElementById(id);
   if (el) el.textContent = value;
@@ -90,6 +113,25 @@ function renderAdminSidebarProfile() {
   const email = user?.email || "admin@sems.com";
   setText("admin-sidebar-name", fullName);
   setText("admin-sidebar-email", email);
+}
+
+function applyAdminHistoryPermissions() {
+  const returnSection = getReturnSectionFromQuery();
+
+  document.querySelectorAll(".nav-link[data-section]").forEach((link) => {
+    const section = String(link.dataset.section || "");
+    const isAllowed = canManageAdminResources() || LIMITED_ADMIN_SECTIONS.includes(section);
+    link.classList.toggle("d-none", !isAllowed);
+    link.classList.toggle("active", section === returnSection);
+    if (isAllowed) {
+      link.href = `/assets/views/admin.html#${section}`;
+    }
+  });
+
+  const backLink = document.getElementById("history-back-link");
+  if (backLink) {
+    backLink.href = `/assets/views/admin.html#${returnSection}`;
+  }
 }
 
 function setLoading(isLoading) {
@@ -203,6 +245,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   renderAdminSidebarProfile();
+  applyAdminHistoryPermissions();
 
   const monthInput = document.getElementById("history-month");
   const queryMonth = new URLSearchParams(window.location.search).get("month");
