@@ -24,24 +24,27 @@
             </div>
 
             <nav class="nav flex-column px-3 mt-3 gap-1">
-                <a class="nav-link d-flex align-items-center gap-3 rounded-3" href="/assets/views/admin.html#dashboard">
+                <a class="nav-link d-flex align-items-center gap-3 rounded-3" data-section="dashboard"
+                    href="/assets/views/admin.html#dashboard">
                     <span class="material-symbols-outlined">dashboard</span> Dashboard
                 </a>
-                <a class="nav-link d-flex align-items-center gap-3 rounded-3" href="/assets/views/admin.html#teachers">
+                <a class="nav-link d-flex align-items-center gap-3 rounded-3" data-section="teachers"
+                    href="/assets/views/admin.html#teachers">
                     <span class="material-symbols-outlined">person_pin_circle</span> Maestros
                 </a>
-                <a class="nav-link active d-flex align-items-center gap-3 rounded-3"
+                <a class="nav-link active d-flex align-items-center gap-3 rounded-3" data-section="students"
                     href="/assets/views/admin.html#students">
                     <span class="material-symbols-outlined">group</span> Alumnos
                 </a>
-                <a class="nav-link d-flex align-items-center gap-3 rounded-3" href="/assets/views/admin.html#classes">
+                <a class="nav-link d-flex align-items-center gap-3 rounded-3" data-section="classes"
+                    href="/assets/views/admin.html#classes">
                     <span class="material-symbols-outlined">menu_book</span> Clases
                 </a>
-                <a class="nav-link d-flex align-items-center gap-3 rounded-3"
+                <a class="nav-link d-flex align-items-center gap-3 rounded-3" data-section="enrollments"
                     href="/assets/views/admin.html#enrollments">
                     <span class="material-symbols-outlined">how_to_reg</span> Inscripciones
                 </a>
-                <a class="nav-link d-flex align-items-center gap-3 rounded-3"
+                <a class="nav-link d-flex align-items-center gap-3 rounded-3" data-section="statistics"
                     href="/assets/views/admin.html#statistics">
                     <span class="material-symbols-outlined">bar_chart</span> Estadísticas
                 </a>
@@ -70,7 +73,7 @@
                         <p class="small text-muted mb-0">Alumno por materia y periodo</p>
                     </div>
                     <div class="admin-actions">
-                        <a class="btn btn-light rounded-3 px-3" href="/assets/views/admin.html#students">
+                        <a id="history-back-link" class="btn btn-light rounded-3 px-3" href="/assets/views/admin.html#students">
                             <i class="bi bi-arrow-left me-1"></i> Volver a Alumnos
                         </a>
                     </div>
